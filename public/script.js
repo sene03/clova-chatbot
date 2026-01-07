@@ -148,7 +148,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 // payload 전송
                 if(payload.actionUrl){
                     console.log("actionUrl");
-                    window.open(payload.actionUrl, '_blank');
+                    //window.open(payload.actionUrl, '_blank');
+                    const features = "width=300,height=400,noopener,noreferrer";
+                    window.open(payload.actionUrl, "_blank", features);
+                    toggleInput(false);
+                    userInput.focus();
                 }else{
                     console.log("payload전송");
                     sendPayload(payload);
@@ -163,6 +167,18 @@ document.addEventListener("DOMContentLoaded", () => {
         chatMessages.appendChild(messageDiv);
 
         scrollToBottom();
+    }
+
+    const bubble = document.getElementById("greeting");
+    if (bubble) {
+        const text = bubble.textContent;
+        bubble.textContent = "";
+        let i = 0;
+
+        const typing = setInterval(() => {
+            bubble.textContent += text[i++];
+            if (i >= text.length) clearInterval(typing);
+        }, 50);
     }
 
     // 이미지 출력
@@ -232,6 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             //액션 url
             if (data.actionUrl){
+                hasChoices = true;
                 renderChoices([
                     {
                         label : "추천 카드 보기",
