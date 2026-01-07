@@ -1,40 +1,94 @@
-const chatMessages = document.getElementById('chat-messages');
-const input = document.getElementById('user-input');
-const sendBtn = document.getElementById('send-btn');
+document.addEventListener('DOMContentLoaded', () => {
+//HTML 다 로드하고 JS를 로드하도록 강제
 
-// 말풍선 추가
-function renderMessage(text, sender) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
+    const chatMessages = document.getElementById('chat-messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
 
-    const bubbleDiv = document.createElement('div');
-    bubbleDiv.className = 'bubble';
-    bubbleDiv.textContent = text;
+    // 말풍선 추가
+    function renderMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}`;
 
-    messageDiv.appendChild(bubbleDiv);
-    chatMessages.appendChild(messageDiv);
+        const bubbleDiv = document.createElement('div');
+        bubbleDiv.className = 'bubble';
+        bubbleDiv.textContent = text;
 
-    scrollToBottom();
-}
+        messageDiv.appendChild(bubbleDiv);
+        chatMessages.appendChild(messageDiv);
 
-// 항상 스크롤 하단 유지
-function scrollToBottom() {
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
+        scrollToBottom();
+    }
 
-//전송 버튼 클릭
-sendBtn.addEventListener('click', () => {
-    const text = input.value.trim();
-    if (!text) return;
+    // 항상 스크롤 하단 유지
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
 
-    renderMessage(text, 'user'); // 사용자 메시지
-    input.value = ''; // 입력창 초기화
+    // 토글 제어
+    function toggleInput(isDisabled) {
+        userInput.disabled = isDisabled;
+        sendBtn.disabled = isDisabled;
+    }
 
-    // 테스트용 메시지
-    renderMessage('답변입니다.', 'bot');
-});
+    async function sendMessage(){
+        const text = userInput.value.trim();
 
-// Enter 적용
-input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') sendBtn.click();
+        if(!text) return; //빈 내용 실행 안함
+
+        //사용자 메시지 추가하는 함수
+        renderMessage(text, 'user');
+        userInput.value = '';
+
+        //로딩 시작 + 버튼 잠금
+        //uiSetLoading(true);
+        toggleInput(true);
+
+        try{
+            //백엔드 서버로 요청 보내기
+            // const response = await fetch('/chatapi', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ message: text })
+            // });
+
+            // if(!response.ok) throw new Error('Network response was not ok');
+
+            // const data = await response.json();
+
+            //mock 데이터
+            const data = {
+                reply: "백엔드 서버 준비중..."
+            }
+            
+            const botReply = data.reply || "답변을 가져올 수 없습니다";
+
+            renderMessage(botReply, 'bot');
+
+            } catch (error) {
+                console.error('Error:', error);
+                renderMessage("서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.", 'bot');
+            } finally {
+                //uiSetLoading(false);
+                toggleInput(false);
+                userInput.focus();
+            }
+
+        }
+
+    
+    //이벤트 리스너
+    if (sendBtn) {
+        // [수정] clcik -> click 오타 수정
+        sendBtn.addEventListener('click', sendMessage);
+    }
+
+    if (userInput) {
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+
 });
