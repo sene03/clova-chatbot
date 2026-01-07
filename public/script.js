@@ -5,6 +5,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
 
+    function generateRandomId() {
+        return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function getCookie(name){
+        console.log(document.cookie);
+        
+        const value = document.cookie
+            .split('; ')
+            .find(row => row.startsWith(name + '='));
+        return value ? value.split('=')[1] : null;
+    }
+
+    function setCookie(name, value, days = 1){
+        const expires = new Date(Date.now() + days * 86400000).toUTCString();
+        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+    }
+
+    function initUserId() {
+        let myId = getCookie('myUserId');
+        
+        if (!myId) {
+            myId = generateRandomId();
+            setCookie('myUserId', myId, 1);
+            console.log("유저아이디 생성 :", myId);
+        } else {
+            console.log("유저아이디 재사용 :", myId);
+        }
+        
+        return myId;
+    }
+
+
     // 말풍선 추가
     function renderMessage(text, sender) {
         const messageDiv = document.createElement('div');
@@ -31,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sendBtn.disabled = isDisabled;
     }
 
+    const currentUserId = initUserId();
+
     async function sendMessage(){
         const text = userInput.value.trim();
 
@@ -46,22 +81,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try{
             //백엔드 서버로 요청 보내기
-            // const response = await fetch('/chatapi', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ message: text })
-            // });
-
-            // if(!response.ok) throw new Error('Network response was not ok');
-
-            // const data = await response.json();
-
-            //mock 데이터
-            const data = {
-                reply: "백엔드 서버 준비중..."
-            }
+            const response = await fetch('/clova/test', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                     userId: currentUserId,
+                     message: text 
+                 })
+            });
             
-            const botReply = data.reply || "답변을 가져올 수 없습니다";
+
+            if(!response.ok) throw new Error('Network response was not ok');
+
+            const data = await response.json();
+
+            // //mock 데이터
+            // const data = {
+            //     reply: "백엔드 서버 준비중..."
+            // }
+            
+            // const botReply = data.reply || "답변을 가져올 수 없습니다";
 
             renderMessage(botReply, 'bot');
 
