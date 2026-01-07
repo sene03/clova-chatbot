@@ -5,6 +5,7 @@ export function parseNcpResponseToDto(response) {
         texts: [],
         choices: [],
         imageUrl: null,
+        actionUrl: null,
     };
 
     for (const bubble of response?.bubbles ?? []) {
@@ -44,7 +45,15 @@ export function parseNcpResponseToDto(response) {
                     if (btn?.type !== "button") continue;
 
                     const actionData = btn?.data?.action?.data;
+                    const actionType = btn?.data?.action?.type;
 
+                    // button의 action type이 link인 경우 url 전달
+                    if (actionType === "link") {
+                        const actionUrl = actionData?.url;
+                        if (actionUrl) dto.actionUrl = actionUrl;
+                        continue;
+                    }
+                    
                     const label =
                         actionData?.displayText || btn?.title || "선택";
 
