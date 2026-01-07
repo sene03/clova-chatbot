@@ -19,17 +19,33 @@ app.get("/", (req, res) => {
     res.sendFile("index.html", { root: "." });
 });
 
-app.get("/clova/test", async (req, res) => {
+// 랜덤으로 생성된 사용자 아이디 반환
+app.get("/userId", (req, res) => {
+    const userId = Math.random().toString(36).slice(2, 10);
+    res.json({ userId });
+});
+
+// Clova Chatbot API 호출 라우트
+app.get("/clova", async (req, res) => {
+    /**
+     * request body 예시
+     * {
+     *   "userId": "test_user_001",
+     *   "message": "안녕하세요"
+     * }
+     */
     try {
-        const message = req.body.message;
+        const { message, userId } = req.body;
 
         const reply = await callClovaChatbot(message, {
             invokeUrl,
             secretKey,
+            userId,
         });
 
         console.log("챗봇 답변:", reply);
-        res.json({ reply });
+        const responsePayload = { userId, message: reply };
+        res.json(responsePayload);
     } catch (error) {
         console.error("--- 에러 발생 ---");
 

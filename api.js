@@ -9,7 +9,7 @@ import EncBase64 from "crypto-js/enc-base64.js";
  */
 export async function callClovaChatbot(
     message,
-    { invokeUrl, secretKey, userId = "test_user_001" }
+    { invokeUrl, secretKey, userId }
 ) {
     // 1. 요청 바디 구성
     const body = {
