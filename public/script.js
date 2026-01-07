@@ -106,12 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (loadingDiv) loadingDiv.remove();
     }
 
-    async function sendMessage() {
+    async function sendMessage(){
         const text = userInput.value.trim();
         if (!text) return;
 
         renderMessage(text, "user");
         userInput.value = "";
+
+        await askServer(text);
+    }
+
+    async function sendPayload(payload){
+        await askServer(payload);
+    }
+
+    async function askServer(msgContent) {
 
         toggleInput(true);
         showLoading();
@@ -122,17 +131,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     userId: currentUserId,
-                    message: text,
+                    message: msgContent,
                 }),
             });
 
             const data = await response.json();
             hideLoading();
 
-            // 챗봇 답변 렌더링
-            data.texts.forEach((text) => {
-                renderMessage(text, "bot");
-            });
+            if (data.texts && Array.isArray(data.texts)) {
+                data.texts.forEach(msg => {
+                    renderMessage(msg, 'bot');
+                });
+            }
+            
+            //TODO : renderButtons
+            if(data.choices && Array.isArray(data.choices)){
+                data.choices.forEach(msg => {
+                    renderMessage(msg.label, 'bot');
+                });
+
+            }
         } catch (error) {
             console.error("Error:", error);
             hideLoading();
