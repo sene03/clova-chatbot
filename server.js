@@ -31,21 +31,21 @@ app.get("/clova", async (req, res) => {
      * request body 예시
      * {
      *   "userId": "test_user_001",
+     *   "timestamp": 1633072800000,
      *   "message": "안녕하세요"
      * }
      */
     try {
         const { message, userId } = req.body;
 
-        const reply = await callClovaChatbot(message, {
+        const result = await callClovaChatbot(message, {
             invokeUrl,
             secretKey,
             userId,
         });
 
-        console.log("챗봇 답변:", reply);
-        const responsePayload = { userId, message: reply };
-        res.json(responsePayload);
+        console.log("챗봇 답변:", result);
+        res.json(result);
     } catch (error) {
         console.error("--- 에러 발생 ---");
 
@@ -58,6 +58,18 @@ app.get("/clova", async (req, res) => {
             res.status(500).json({ message: "Clova API 호출 실패" });
         }
     }
+});
+
+// test api
+// body 말고 query로 받기
+app.get("/clova/test", async (req, res) => {
+    const message = req.query.message;
+    const result = await callClovaChatbot(message, {
+        invokeUrl,
+        secretKey,
+        userId: "test_user_001",
+    });
+    res.json(result);
 });
 
 app.listen(PORT, () => {
