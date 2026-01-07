@@ -146,7 +146,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderMessage(label, "user");
 
                 // payload 전송
-                sendPayload(payload);
+                if(payload.actionUrl){
+                    console.log("actionUrl");
+                    window.open(payload.actionUrl, '_blank');
+                }else{
+                    console.log("payload전송");
+                    sendPayload(payload);
+                }
             });
 
             wrapper.appendChild(btn);
@@ -183,9 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
         chatMessages.appendChild(messageDiv);
         scrollToBottom();
     }
-
-
-
 
     async function sendPayload(payload){
         await askServer(payload);
@@ -225,6 +228,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (data.choices && data.choices.length > 0) {
                 hasChoices = true;
                 renderChoices(data.choices);
+            }
+
+            //액션 url
+            if (data.actionUrl){
+                renderChoices([
+                    {
+                        label : "추천 카드 보기",
+                        payload: { actionUrl: data.actionUrl}
+                    }
+                ])
             }
 
         } catch (error) {
