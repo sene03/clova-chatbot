@@ -209,18 +209,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
             hideLoading();
+            
+            //이미지 렌더링
+            if (data.imageUrl) {
+                renderImage(data.imageUrl);
+            }
 
-            if (data.texts && Array.isArray(data.texts)) {
+            if (data.texts ) {
                 data.texts.forEach(msg => {
                     renderMessage(msg, 'bot');
                 });
             }
 
-            //이미지 렌더링
-            if (data.imageUrl) {
-                renderImage(data.imageUrl);
-            }
-            
             //choices 렌더링
             if (data.choices && data.choices.length > 0) {
                 hasChoices = true;
@@ -254,4 +254,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const bubble = document.getElementById("greeting");
+    const text = bubble.textContent;
+
+    bubble.textContent = "";
+    let i = 0;
+
+    const typing = setInterval(() => {
+        bubble.textContent += text[i];
+        i++;
+
+        if (i >= text.length) {
+            clearInterval(typing);
+        }
+    }, 50); 
 });
