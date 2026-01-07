@@ -2,11 +2,22 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Document</title>
         <script defer src="script.js"></script>
     </head>
     <body>
-        Hello World!
+        <div class="chat-container">
+        <div id="chat-messages" class="chat-messages">
+            <div class="message bot">
+                <div class="bubble">안녕하세요! 무엇을 도와드릴까요?</div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="메시지를 입력하세요..." autocomplete="off">
+            <button id="send-btn">전송</button>
+        </div>
+    </div>
     </body>
 </html>

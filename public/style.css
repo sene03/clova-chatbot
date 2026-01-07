@@ -1,0 +1,107 @@
+/* style.css */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body, html {
+    height: 100%;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f5f5f5;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 전체 화면 사용 */
+    max-width: 600px; /* 태블릿/PC 대응 */
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+/* 채팅 스크롤 영역 */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto; /* 스크롤 활성화 */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 메시지 공통 스타일 */
+.message {
+    display: flex;
+    max-width: 80%;
+}
+
+.message.user {
+    align-self: flex-end; /* 사용자: 오른쪽 정렬 */
+}
+
+.message.bot {
+    align-self: flex-start; /* 봇: 왼쪽 정렬 */
+}
+
+.bubble {
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+/* 색상 구분 */
+.message.user .bubble {
+    background-color: #007bff; /* 파란색 */
+    color: white;
+    border-bottom-right-radius: 0;
+}
+
+.message.bot .bubble {
+    background-color: #e9ecef; /* 회색 */
+    color: #333;
+    border-bottom-left-radius: 0;
+}
+
+/* 입력 영역 */
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+
+#user-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+}
+
+#send-btn {
+    margin-left: 10px;
+    padding: 0 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 전송 버튼 비활성화 상태 (중복 전송 방지용) */
+#send-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 로딩 인디케이터 스타일 */
+.typing-indicator span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #aaa;
+    border-radius: 50%;
+    animation: typing 1s infinite;
+    margin: 0 2px;
+}
+@keyframes typing { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
