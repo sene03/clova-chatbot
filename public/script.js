@@ -52,6 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
 
+        if (sender === 'bot') {
+        const logoImg = document.createElement('img');
+        logoImg.src = 'bot-logo.png';
+        logoImg.className = 'bot-logo';
+        messageDiv.appendChild(logoImg);
+        }
+
         const bubbleDiv = document.createElement('div');
         bubbleDiv.className = 'bubble';
         bubbleDiv.textContent = text;
