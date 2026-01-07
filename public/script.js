@@ -163,9 +163,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function askServer(msgContent) {
-
         toggleInput(true);
         showLoading();
+
+        let hasChoices = false;
 
         try {
             const response = await fetch("/clova", {
@@ -188,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             //TODO : renderButtons
             if (data.choices && data.choices.length > 0) {
+                hasChoices = true;
                 renderChoices(data.choices);
             }
 
@@ -199,8 +201,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 "bot"
             );
         } finally {
-            toggleInput(false);
-            userInput.focus();
+            if (!hasChoices){
+                toggleInput(false);
+                userInput.focus();
+            }
         }
     }
 
