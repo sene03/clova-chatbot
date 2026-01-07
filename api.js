@@ -1,6 +1,7 @@
 import axios from "axios";
 import HmacSHA256 from "crypto-js/hmac-sha256.js";
 import EncBase64 from "crypto-js/enc-base64.js";
+import { parseNcpResponseToDto } from "./util.js";
 
 /**
  * Clova Chatbot에 메시지를 보내고 응답 텍스트를 반환
@@ -42,8 +43,6 @@ export async function callClovaChatbot(
     });
 
     // 4. 챗봇 응답 텍스트 반환
-    const timestamp = response.data.timestamp;
-    const reply = response.data.bubbles[0].data.description;
-    const result = { userId, timestamp, reply };
-    return result;
+    return parseNcpResponseToDto(response.data);
+    // return response.data;
 }
