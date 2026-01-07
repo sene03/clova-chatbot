@@ -171,3 +171,14 @@ html, body {
 .choice-btn.disabled {
   opacity: 0.7;
 }
+
+.image-bubble {
+    padding: 6px;
+}
+
+.chat-image {
+    max-width: 150px;
+    border-radius: 12px;
+    display: block;
+}
+
