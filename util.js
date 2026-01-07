@@ -4,6 +4,7 @@ export function parseNcpResponseToDto(response) {
         timestamp: response?.timestamp,
         texts: [],
         choices: [],
+        imageUrl: null,
     };
 
     for (const bubble of response?.bubbles ?? []) {
@@ -16,6 +17,19 @@ export function parseNcpResponseToDto(response) {
 
         /* 2. TEMPLATE (SINGLEFORM) */
         if (bubble?.type === "template") {
+            // image일 경우
+            if (bubble?.data?.cover?.type === "image") {
+                // title을 texts에 추가
+                const title = bubble?.data?.cover?.title;
+                if (title) dto.texts.push(title);
+
+                // imageUrl 설정
+                const imageUrl = bubble?.data?.cover?.data?.imageUrl;
+                if (imageUrl) dto.imageUrl = imageUrl;
+                continue;
+            }
+
+            // text일 경우
             // 2-1. cover 텍스트 - texts에 추가
             const coverText = bubble?.data?.cover?.data?.description;
             if (coverText) dto.texts.push(coverText);
