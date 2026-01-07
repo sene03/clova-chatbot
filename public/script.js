@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const userInput = document.getElementById("user-input");
     const sendBtn = document.getElementById("send-btn");
 
+    let isFirstBotMessage = true;
+
     function getCookie(name) {
         console.log(document.cookie);
 
@@ -137,6 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             btn.addEventListener("click", () => {
                 // 버튼 비활성화
+                wrapper.querySelectorAll("button").forEach(b => b.disabled = true);
                 toggleInput(true);
 
                 // 선택한 내용은 유저 메세지로
@@ -155,6 +158,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         scrollToBottom();
     }
+
+    // 이미지 출력
+    function renderImage(imageUrl) {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message bot";
+
+        const logoImg = document.createElement("img");
+        logoImg.src = "bot-logo.png";
+        logoImg.className = "bot-logo";
+
+        const bubbleDiv = document.createElement("div");
+        bubbleDiv.className = "bubble image-bubble";
+
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.alt = "bot image";
+        img.className = "chat-image";
+
+        bubbleDiv.appendChild(img);
+        messageDiv.appendChild(logoImg);
+        messageDiv.appendChild(bubbleDiv);
+
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
 
 
 
@@ -185,8 +214,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     renderMessage(msg, 'bot');
                 });
             }
+
+            //이미지 렌더링
+            if (data.imageUrl) {
+                renderImage(data.imageUrl);
+            }
             
-            //TODO : renderButtons
+            //choices 렌더링
             if (data.choices && data.choices.length > 0) {
                 renderChoices(data.choices);
             }
