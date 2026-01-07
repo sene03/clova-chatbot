@@ -106,12 +106,21 @@ document.addEventListener("DOMContentLoaded", () => {
         if (loadingDiv) loadingDiv.remove();
     }
 
-    async function sendMessage() {
+    async function sendMessage(){
         const text = userInput.value.trim();
         if (!text) return;
 
         renderMessage(text, "user");
         userInput.value = "";
+
+        await askServer(text);
+    }
+
+    async function sendPayload(payload){
+        await askServer(payload);
+    }
+
+    async function askServer(msgContent) {
 
         toggleInput(true);
         showLoading();
@@ -122,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     userId: currentUserId,
-                    message: text,
+                    message: msgContent,
                 }),
             });
 
@@ -134,7 +143,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     renderMessage(msg, 'bot');
                 });
             }
-
+            
+            //TODO : renderButtons
             if(data.choices && Array.isArray(data.choices)){
                 data.choices.forEach(msg => {
                     renderMessage(msg.label, 'bot');
