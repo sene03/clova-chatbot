@@ -42,5 +42,8 @@ export async function callClovaChatbot(
     });
 
     // 4. 챗봇 응답 텍스트 반환
-    return response.data.bubbles[0].data.description;
+    const timestamp = response.data.timestamp;
+    const reply = response.data.bubbles[0].data.description;
+    const result = { userId, timestamp, reply };
+    return result;
 }
