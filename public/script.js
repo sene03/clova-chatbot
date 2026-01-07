@@ -116,6 +116,48 @@ document.addEventListener("DOMContentLoaded", () => {
         await askServer(text);
     }
 
+    //choices render
+    function renderChoices(choices) {
+        toggleInput(true);
+
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "message bot";
+
+        const logoImg = document.createElement("img");
+        logoImg.src = "bot-logo.png";
+        logoImg.className = "bot-logo";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "choice-wrapper";
+
+        choices.forEach(({ label, payload }) => {
+            const btn = document.createElement("button");
+            btn.className = "choice-btn";
+            btn.textContent = label;
+
+            btn.addEventListener("click", () => {
+                // 버튼 비활성화
+                toggleInput(true);
+
+                // 선택한 내용은 유저 메세지로
+                renderMessage(label, "user");
+
+                // payload 전송
+                sendPayload(payload);
+            });
+
+            wrapper.appendChild(btn);
+        });
+
+        messageDiv.appendChild(logoImg);
+        messageDiv.appendChild(wrapper);
+        chatMessages.appendChild(messageDiv);
+
+        scrollToBottom();
+    }
+
+
+
     async function sendPayload(payload){
         await askServer(payload);
     }
@@ -145,12 +187,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             
             //TODO : renderButtons
-            if(data.choices && Array.isArray(data.choices)){
-                data.choices.forEach(msg => {
-                    renderMessage(msg.label, 'bot');
-                });
-
+            if (data.choices && data.choices.length > 0) {
+                renderChoices(data.choices);
             }
+
         } catch (error) {
             console.error("Error:", error);
             hideLoading();
