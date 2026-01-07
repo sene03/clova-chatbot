@@ -26,7 +26,7 @@ app.get("/userId", (req, res) => {
 });
 
 // Clova Chatbot API 호출 라우트
-app.get("/clova", async (req, res) => {
+app.post("/clova", async (req, res) => {
     /**
      * request body 예시
      * {
