@@ -129,10 +129,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             hideLoading();
 
-            // 챗봇 답변 렌더링
-            data.texts.forEach((text) => {
-                renderMessage(text, "bot");
-            });
+            if (data.texts && Array.isArray(data.texts)) {
+                data.texts.forEach(msg => {
+                    renderMessage(msg, 'bot');
+                });
+            }
+
+            if(data.choices && Array.isArray(data.choices)){
+                data.choices.forEach(msg => {
+                    renderMessage(msg.label, 'bot');
+                });
+
+
+            }
         } catch (error) {
             console.error("Error:", error);
             hideLoading();
