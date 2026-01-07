@@ -3,7 +3,6 @@ export function parseNcpResponseToDto(response) {
         userId: response?.userId,
         timestamp: response?.timestamp,
         texts: [],
-        coverText: undefined,
         choices: [],
     };
 
@@ -17,9 +16,9 @@ export function parseNcpResponseToDto(response) {
 
         /* 2. TEMPLATE (SINGLEFORM) */
         if (bubble?.type === "template") {
-            // 2-1. cover 텍스트 (질문)
-            const cover = bubble?.data?.cover?.data?.description;
-            if (cover) dto.coverText = cover;
+            // 2-1. cover 텍스트 - texts에 추가
+            const coverText = bubble?.data?.cover?.data?.description;
+            if (coverText) dto.texts.push(coverText);
 
             // 2-2. 버튼들
             const table = bubble?.data?.contentTable;
