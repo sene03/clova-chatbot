@@ -31,7 +31,6 @@ app.post("/clova", async (req, res) => {
      * request body 예시
      * {
      *   "userId": "test_user_001",
-     *   "timestamp": 1633072800000,
      *   "message": "안녕하세요"
      * }
      */
