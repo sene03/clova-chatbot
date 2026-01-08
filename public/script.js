@@ -8,7 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let isFirstBotMessage = true;
 
     function getCookie(name) {
-        console.log(document.cookie);
+        console.dir(document);
+        const value1 = document.cookie;
+        console.log(value1);
 
         const value = document.cookie
             .split("; ")
@@ -229,15 +231,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             hideLoading();
 
+            //이미지 렌더링
+            if (data.imageUrl) {
+                renderImage(data.imageUrl);
+            }
+
             if (data.texts && Array.isArray(data.texts)) {
                 data.texts.forEach(msg => {
                     renderMessage(msg, 'bot');
                 });
-            }
-
-            //이미지 렌더링
-            if (data.imageUrl) {
-                renderImage(data.imageUrl);
             }
             
             //choices 렌더링
